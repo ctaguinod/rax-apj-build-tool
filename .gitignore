@@ -13,3 +13,9 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Binary/Executable, built with `go build .`
+rax-apj-build-tool
+
+# Validated xlsx output files
+validated-*

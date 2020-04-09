@@ -1,0 +1,9 @@
+input: Rapha_Racing_UAT_Imp_Doc_V2.xlsx
+sheets: 
+  - Summary
+  - Networking Services
+  - Storage & Compute Services
+#output: some-output
+#resources:
+# - vpc
+# - ec2
