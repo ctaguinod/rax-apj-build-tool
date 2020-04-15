@@ -36,11 +36,11 @@ var validateCmd = &cobra.Command{
 
 Example Usage:
 
-rax-apj-build-tool validate -i ImpDoc_FAWS_APJTrial_v0.1.xlsx --sheets="Summary","Networking Services"
+rax-apj-build-tool validate --config config.yaml 
 
 or 
 
-rax-apj-build-tool validate --config config.yaml 
+rax-apj-build-tool validate -i ImpDoc_FAWS_APJTrial_v0.1.xlsx --sheets="Summary","Networking Services" --resources="summary","vpc","subnets"
 
 The command will create a validated DD spreadsheet validated-ImpDoc_FAWS_APJTrial_v0.1.xlsx in current working directory.
 Required cells that are empty will be highlighted in color ORANGE which means validation FAILED and needed to be filled in.
@@ -61,6 +61,12 @@ Required cells that are not empty will be highlighted in color GREEN which means
 			sheets = viper.GetStringSlice("sheets")
 		}
 
+		// Get the --resources flag value
+		resources, _ := cmd.Flags().GetStringSlice("resources")
+		if viper.GetStringSlice("resources") != nil {
+			resources = viper.GetStringSlice("resources")
+		}
+
 		if inputFile != "" {
 
 			// Copy inputFile to validated-inputFile and modify only validated-inputFile
@@ -75,31 +81,93 @@ Required cells that are not empty will be highlighted in color GREEN which means
 			// Iterate each sheet
 			for _, sheet := range sheets {
 
-				// Function validate syntax:
-				// validate(inputFile, sheet, key string, columns []string, rows []int)
-				if sheet == "Summary" {
+				for _, resource := range resources {
 
-					// Summary | Rows 9 to 24 | Column B C
-					validateCellsIfNotEmpty(inputFile, sheet, "B", []string{"C"}, []int{10, 11, 12, 13, 16, 17, 18, 19, 20, 23, 24})
+					if sheet == "Summary" && resource == "summary" {
+						key := viper.GetString("resourcesMap.summary.key")
+						values := viper.GetStringSlice("resourcesMap.summary.values")
+						rows := viper.GetStringSlice("resourcesMap.summary.rows")
+						if key == "" && values == nil && rows == nil {
+							key := "B"
+							values := []string{"C"}
+							rows := []string{"10", "11", "12", "13", "16", "17", "18", "19", "20", "23", "24"}
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						} else {
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
 
-				} else if sheet == "Networking Services" {
+					} else if sheet == "Networking Services" && resource == "vpc" {
+						key := viper.GetString("resourcesMap.vpc.key")
+						values := viper.GetStringSlice("resourcesMap.vpc.values")
+						rows := viper.GetStringSlice("resourcesMap.vpc.rows")
+						if key == "" && values == nil && rows == nil {
+							key := "B"
+							values := []string{"C"}
+							rows := []string{"5", "6", "7", "8", "9", "10", "11"}
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						} else {
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
 
-					// Networking Services | Networking | Rows 5 to 11 | Column B C
-					validateCellsIfNotEmpty(inputFile, sheet, "B", []string{"C"}, []int{5, 6, 7, 8, 9, 10, 11})
+					} else if sheet == "Networking Services" && resource == "subnets" {
+						key := viper.GetString("resourcesMap.subnets.key")
+						values := viper.GetStringSlice("resourcesMap.subnets.values")
+						rows := viper.GetStringSlice("resourcesMap.subnets.rows")
+						if key == "" && values == nil && rows == nil {
+							key := "B"
+							values := []string{"C", "D", "E", "F"}
+							rows := []string{"15", "16", "18", "19"}
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						} else {
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
 
-					// Networking Services | Subnets | Rows 15 to 19 | Column B C D E F
-					validateCellsIfNotEmpty(inputFile, sheet, "B", []string{"C", "D", "E", "F"}, []int{15, 16, 18, 19})
+					} else if sheet == "Storage & Compute Services" && resource == "ec2_instances" {
+						key := viper.GetString("resourcesMap.ec2_instances.key")
+						values := viper.GetStringSlice("resourcesMap.ec2_instances.values")
+						rows := viper.GetStringSlice("resourcesMap.ec2_instances.rows")
+						if key == "" && values == nil && rows == nil {
+							key := "B"
+							values := []string{"C", "D"}
+							rows := []string{"17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"}
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						} else {
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
 
-				} else if sheet == "Storage & Compute Services" {
-
-					// Storage & Compute Services | EC2 Autoscaling Groups | Rows 2 to 14 | Column B C D
-					validateCellsIfNotEmpty(inputFile, sheet, "B", []string{"C", "D"}, []int{2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14})
-
-					// Storage & Compute Services | EC2 Standalone Instances | Rows 17 to 29 | Column B C
-					validateCellsIfNotEmpty(inputFile, sheet, "B", []string{"C"}, []int{17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29})
-
-				} else {
-					fmt.Printf("Unknown Sheet: %s\n", sheet)
+					} else if sheet == "Storage & Compute Services" && resource == "auto_scaling_groups" {
+						key := viper.GetString("resourcesMap.auto_scaling_groups.key")
+						values := viper.GetStringSlice("resourcesMap.auto_scaling_groups.values")
+						rows := viper.GetStringSlice("resourcesMap.auto_scaling_groups.rows")
+						if key == "" && values == nil && rows == nil {
+							key := "B"
+							values := []string{"C", "D"}
+							rows := []string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"}
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						} else {
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+					}
 				}
 
 			}
@@ -114,18 +182,17 @@ Required cells that are not empty will be highlighted in color GREEN which means
 func init() {
 	rootCmd.AddCommand(validateCmd)
 
-	// Look for ImpDoc_FAWS_APJTrial_v0.1.xlsx in current directory if -i flag not defined.
-	//validateCmd.Flags().StringP("input", "i", "ImpDoc_FAWS_APJTrial_v0.1.xlsx", "DD Spreadsheet file to process")
-	// No Default Value
+	// -i flag
 	validateCmd.Flags().StringP("input", "i", "", "DD Spreadsheet file to process")
 
-	// Process sheets: "Summary", "Networking Services", "Storage & Compute Services" by default if --sheets flat not invoked.
-	//validateCmd.Flags().StringSlice("sheets", []string{"Summary", "Networking Services", "Storage & Compute Services"}, "Sheets to process")
-	// No Default Value
-	validateCmd.Flags().StringSlice("sheets", []string{}, "Sheets to process")
+	// --sheets flag
+	validateCmd.Flags().StringSlice("sheets", []string{}, "Sheets to process, e.g. Networking Service, Storage & Compute Service")
+
+	// --resources flag
+	validateCmd.Flags().StringSlice("resources", []string{}, "Resources to process, e.g. vpc, subnets")
 }
 
-func validateCellsIfNotEmpty(inputFile, sheet, key string, columns []string, rows []int) {
+func validateCellsIfNotEmpty(inputFile string, sheet string, key string, columns []string, rows []string) {
 
 	// Input File.
 	xlsxFileIn, err := excelize.OpenFile(inputFile)
@@ -146,24 +213,23 @@ func validateCellsIfNotEmpty(inputFile, sheet, key string, columns []string, row
 		fmt.Println(err)
 	}
 
-	fmt.Printf("############ Sheet: %s ############\n", sheet)
 	fmt.Printf("###### Columns: %s ######\n", columns)
-	fmt.Printf("###### Rows: %d ######\n", rows)
+	fmt.Printf("###### Rows: %s ######\n", rows)
 	fmt.Println()
 
 	for _, column := range columns {
 
 		for _, rows := range rows {
-			value := xlsxFileIn.GetCellValue(sheet, fmt.Sprintf("%s%d", column, rows))
+			value := xlsxFileIn.GetCellValue(sheet, fmt.Sprintf("%s%s", column, rows))
 			value = strings.Replace(value, "\n", ", ", -1) //  Replace new lines with comma
-			key := xlsxFileIn.GetCellValue(sheet, fmt.Sprintf("%s%d", key, rows))
+			key := xlsxFileIn.GetCellValue(sheet, fmt.Sprintf("%s%s", key, rows))
 
 			if value != "" {
-				fmt.Printf("%s%d %s: %s\n", column, rows, key, value)
-				xlsxFileIn.SetCellStyle(sheet, fmt.Sprintf("%s%d", column, rows), fmt.Sprintf("%s%d", column, rows), styleCellColorGreen)
+				fmt.Printf("%s%s %s: %s\n", column, rows, key, value)
+				xlsxFileIn.SetCellStyle(sheet, fmt.Sprintf("%s%s", column, rows), fmt.Sprintf("%s%s", column, rows), styleCellColorGreen)
 			} else {
-				fmt.Printf("%s%d %s: %s\n", column, rows, key, "<NULL> ***FAIL***")
-				xlsxFileIn.SetCellStyle(sheet, fmt.Sprintf("%s%d", column, rows), fmt.Sprintf("%s%d", column, rows), styleCellColorOrange)
+				fmt.Printf("%s%s %s: %s\n", column, rows, key, "<NULL> ***FAIL***")
+				xlsxFileIn.SetCellStyle(sheet, fmt.Sprintf("%s%s", column, rows), fmt.Sprintf("%s%s", column, rows), styleCellColorOrange)
 			}
 		}
 
