@@ -107,7 +107,24 @@ Required cells that are not empty will be highlighted in color GREEN which means
 						if key == "" && values == nil && rows == nil {
 							key := "B"
 							values := []string{"C"}
-							rows := []string{"5", "6", "7", "8", "9", "10", "11"}
+							rows := []string{"5", "6", "7", "8", "9", "10", "11", "12", "13"}
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						} else {
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Networking Services" && resource == "vpc_endpoints" {
+						key := viper.GetString("resourcesMap.vpc_endpoints.key")
+						values := viper.GetStringSlice("resourcesMap.vpc_endpoints.values")
+						rows := viper.GetStringSlice("resourcesMap.vpc_endpoints.rows")
+						if key == "" && values == nil && rows == nil {
+							key := "B"
+							values := []string{"C"}
+							rows := []string{"21", "22", "23"}
 							fmt.Printf("############ Sheet: %s ############\n", sheet)
 							fmt.Printf("############ Resource: %s ############\n", resource)
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
@@ -124,7 +141,7 @@ Required cells that are not empty will be highlighted in color GREEN which means
 						if key == "" && values == nil && rows == nil {
 							key := "B"
 							values := []string{"C", "D", "E", "F"}
-							rows := []string{"15", "16", "18", "19"}
+							rows := []string{"15", "16", "17", "18", "19"}
 							fmt.Printf("############ Sheet: %s ############\n", sheet)
 							fmt.Printf("############ Resource: %s ############\n", resource)
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
@@ -159,6 +176,38 @@ Required cells that are not empty will be highlighted in color GREEN which means
 							key := "B"
 							values := []string{"C", "D"}
 							rows := []string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"}
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						} else {
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+					} else if sheet == "Database" && resource == "rds" {
+						key := viper.GetString("resourcesMap.rds.key")
+						values := viper.GetStringSlice("resourcesMap.rds.values")
+						rows := viper.GetStringSlice("resourcesMap.rds.rows")
+						if key == "" && values == nil && rows == nil {
+							key := "B"
+							values := []string{"C"}
+							rows := []string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"}
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						} else {
+							fmt.Printf("############ Sheet: %s ############\n", sheet)
+							fmt.Printf("############ Resource: %s ############\n", resource)
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+					} else if sheet == "Database" && resource == "elasticache" {
+						key := viper.GetString("resourcesMap.elasticache.key")
+						values := viper.GetStringSlice("resourcesMap.elasticache.values")
+						rows := viper.GetStringSlice("resourcesMap.elasticache.rows")
+						if key == "" && values == nil && rows == nil {
+							key := "B"
+							values := []string{"C"}
+							rows := []string{"17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34"}
 							fmt.Printf("############ Sheet: %s ############\n", sheet)
 							fmt.Printf("############ Resource: %s ############\n", resource)
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
