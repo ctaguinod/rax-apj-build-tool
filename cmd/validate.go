@@ -18,8 +18,6 @@ package cmd
 
 import (
 	"fmt"
-	"io"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -100,120 +98,324 @@ Required cells that are not empty will be highlighted in color GREEN which means
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
 						}
 
-					} else if sheet == "Networking Services" && resource == "vpc" {
-						key := viper.GetString("resourcesMap.vpc.key")
-						values := viper.GetStringSlice("resourcesMap.vpc.values")
-						rows := viper.GetStringSlice("resourcesMap.vpc.rows")
-						if key == "" && values == nil && rows == nil {
-							key := "B"
-							values := []string{"C"}
-							rows := []string{"5", "6", "7", "8", "9", "10", "11", "12", "13"}
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
+					} else if sheet == "Networking Services" && resource == "Networking" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Networking")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
 						}
 
-					} else if sheet == "Networking Services" && resource == "vpc_endpoints" {
-						key := viper.GetString("resourcesMap.vpc_endpoints.key")
-						values := viper.GetStringSlice("resourcesMap.vpc_endpoints.values")
-						rows := viper.GetStringSlice("resourcesMap.vpc_endpoints.rows")
-						if key == "" && values == nil && rows == nil {
-							key := "B"
-							values := []string{"C"}
-							rows := []string{"21", "22", "23"}
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
+					} else if sheet == "Networking Services" && resource == "Subnets" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Subnets")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
 						}
 
-					} else if sheet == "Networking Services" && resource == "subnets" {
-						key := viper.GetString("resourcesMap.subnets.key")
-						values := viper.GetStringSlice("resourcesMap.subnets.values")
-						rows := viper.GetStringSlice("resourcesMap.subnets.rows")
-						if key == "" && values == nil && rows == nil {
-							key := "B"
-							values := []string{"C", "D", "E", "F"}
-							rows := []string{"15", "16", "17", "18", "19"}
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
+					} else if sheet == "Networking Services" && resource == "VPC Endpoints" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "VPC Endpoints")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
 						}
 
-					} else if sheet == "Storage & Compute Services" && resource == "ec2_instances" {
-						key := viper.GetString("resourcesMap.ec2_instances.key")
-						values := viper.GetStringSlice("resourcesMap.ec2_instances.values")
-						rows := viper.GetStringSlice("resourcesMap.ec2_instances.rows")
-						if key == "" && values == nil && rows == nil {
-							key := "B"
-							values := []string{"C", "D"}
-							rows := []string{"17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"}
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
+					} else if sheet == "Networking Services" && resource == "VPN Gateway" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "VPN Gateway")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
 						}
 
-					} else if sheet == "Storage & Compute Services" && resource == "auto_scaling_groups" {
-						key := viper.GetString("resourcesMap.auto_scaling_groups.key")
-						values := viper.GetStringSlice("resourcesMap.auto_scaling_groups.values")
-						rows := viper.GetStringSlice("resourcesMap.auto_scaling_groups.rows")
-						if key == "" && values == nil && rows == nil {
-							key := "B"
-							values := []string{"C", "D"}
-							rows := []string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"}
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-					} else if sheet == "Database" && resource == "rds" {
-						key := viper.GetString("resourcesMap.rds.key")
-						values := viper.GetStringSlice("resourcesMap.rds.values")
-						rows := viper.GetStringSlice("resourcesMap.rds.rows")
-						if key == "" && values == nil && rows == nil {
-							key := "B"
-							values := []string{"C"}
-							rows := []string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"}
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
+					} else if sheet == "Networking Services" && resource == "Route53" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Route53")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
 						}
-					} else if sheet == "Database" && resource == "elasticache" {
-						key := viper.GetString("resourcesMap.elasticache.key")
-						values := viper.GetStringSlice("resourcesMap.elasticache.values")
-						rows := viper.GetStringSlice("resourcesMap.elasticache.rows")
-						if key == "" && values == nil && rows == nil {
-							key := "B"
-							values := []string{"C"}
-							rows := []string{"17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34"}
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
+
+					} else if sheet == "Networking Services" && resource == "Certificate Manager" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Certificate Manager")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
+						}
+
+					} else if sheet == "Storage & Compute Services" && resource == "EC2 Standalone Instances" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "EC2 Standalone Instances")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Storage & Compute Services" && resource == "EC2 Autoscaling Groups" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "EC2 Autoscaling Groups")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Storage & Compute Services" && resource == "Network Load Balancers" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Network Load Balancers")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Storage & Compute Services" && resource == "Application Load Balancers" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Application Load Balancers")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Storage & Compute Services" && resource == "Target Groups" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Target Groups")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Storage & Compute Services" && resource == "S3 Buckets" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "S3 Buckets")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Storage & Compute Services" && resource == "EFS" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "EFS")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Database" && resource == "RDS" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "RDS")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+
+					} else if sheet == "Database" && resource == "Elasticache - Redis" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Elasticache - Redis")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+					} else if sheet == "Security Groups" && resource == "Security Group" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "Security Group")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+					} else if sheet == "IAM" && resource == "IAM Resource" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "IAM Resource")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
+							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+						}
+					} else if sheet == "Additional Services" && resource == "CodeDeploy" {
+						// Header
+						fmt.Printf("############ Sheet: %s ############\n", sheet)
+						fmt.Printf("############ Resource: %s ############\n", resource)
+
+						// Scan for Keys
+						keySlice, _ := ScanKeys(inputFile, sheet, "CodeDeploy")
+
+						// Loop for all matched keys
+						for _, v := range keySlice {
+							// scan for borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
 						}
 					}
@@ -291,30 +493,4 @@ func validateCellsIfNotEmpty(inputFile string, sheet string, key string, columns
 		fmt.Println(err)
 	}
 
-}
-
-// Function to copy file
-func copy(src, dst string) (int64, error) {
-	sourceFileStat, err := os.Stat(src)
-	if err != nil {
-		return 0, err
-	}
-
-	if !sourceFileStat.Mode().IsRegular() {
-		return 0, fmt.Errorf("%s is not a regular file", src)
-	}
-
-	source, err := os.Open(src)
-	if err != nil {
-		return 0, err
-	}
-	defer source.Close()
-
-	destination, err := os.Create(dst)
-	if err != nil {
-		return 0, err
-	}
-	defer destination.Close()
-	nBytes, err := io.Copy(destination, source)
-	return nBytes, err
 }

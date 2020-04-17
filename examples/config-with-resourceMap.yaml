@@ -1,0 +1,56 @@
+input: Rapha_Racing_UAT_Imp_Doc_V2.xlsx
+sheets:
+  - Summary
+  - Networking Services
+  - Storage & Compute Services
+  - Database
+resources:
+  - summary
+  - vpc
+  - subnets
+  - vpc_endpoints
+  - ec2_instances
+  - auto_scaling_groups
+  - rds
+  - elasticache
+resourcesMap:
+  summary:
+    sheet: "Summary"
+    key: "B"
+    values: "C"
+    rows: "10 11 12 13 16 17 18 19 20 23 24"
+  vpc:
+    sheet: "Networking Services"
+    key: "B"
+    values: "C"
+    rows: "5 6 7 8 9 10 11"
+  subnets:
+    sheet: "Networking Services"
+    key: "B"
+    values: "C D E F"
+    rows: "15 16 18 19"
+  vpc_endpoints:
+    sheet: "Networking Services"
+    key: "B"
+    values: "C D"
+    rows: "21 22 23"
+  ec2_instances:
+    sheet: "Storage & Compute Services"
+    key: "B"
+    values: "C D E F G H I"
+    rows: "17 18 19 20 21 22 23 24 25 26 27 28 29 30"
+  auto_scaling_groups:
+    sheet: "Storage & Compute Services"
+    key: "B"
+    values: "C D E"
+    rows: "2 3 4 5 6 7 8 9 10 11 12 13 14 15"
+  rds:
+    sheet: "Database"
+    key: "B"
+    values: "C"
+    rows: "2 3 4 5 6 7 8 9 10 11 12 13 14 15"
+  elasticache:
+    sheet: "Database"
+    key: "B"
+    values: "C"
+    rows: "17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34"
