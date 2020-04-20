@@ -38,7 +38,7 @@ rax-apj-build-tool validate --config config.yaml
 
 or 
 
-rax-apj-build-tool validate -i ImpDoc_FAWS_APJTrial_v0.1.xlsx --sheets="Summary","Networking Services" --resources="summary","vpc","subnets"
+rax-apj-build-tool validate -i ImpDoc_FAWS_APJTrial_v0.1.xlsx --sheets="Networking Services","Storage & Compute Services" --resources="Networking","Subnetworks","EC2 Standalone Instances","EC2 Autoscaling Groups"
 
 The command will create a validated DD spreadsheet validated-ImpDoc_FAWS_APJTrial_v0.1.xlsx in current working directory.
 Required cells that are empty will be highlighted in color ORANGE which means validation FAILED and needed to be filled in.
@@ -81,350 +81,47 @@ Required cells that are not empty will be highlighted in color GREEN which means
 
 				for _, resource := range resources {
 
-					if sheet == "Summary" && resource == "summary" {
-						key := viper.GetString("resourcesMap.summary.key")
-						values := viper.GetStringSlice("resourcesMap.summary.values")
-						rows := viper.GetStringSlice("resourcesMap.summary.rows")
-						if key == "" && values == nil && rows == nil {
-							key := "B"
-							values := []string{"C"}
-							rows := []string{"10", "11", "12", "13", "16", "17", "18", "19", "20", "23", "24"}
+					// Scan for Keys
+					keySlice, _ := ScanKeys(inputFile, sheet, resource)
+					for _, v := range keySlice {
+						if sheet == "Summary" {
+							sheet := viper.GetString("resourcesMap.summary.sheet")
+							key := viper.GetString("resourcesMap.summary.key")
+							values := viper.GetStringSlice("resourcesMap.summary.values")
+							rows := viper.GetStringSlice("resourcesMap.summary.rows")
+							if sheet == "" && key == "" && values == nil && rows == nil {
+								sheet = "Summary"
+								key := "B"
+								values := []string{"C"}
+								rows := []string{"10", "11", "12", "13", "16", "17", "18", "19", "20", "23", "24"}
+								fmt.Printf("############ Sheet: %s ############\n", sheet)
+								fmt.Printf("############ Resource: %s ############\n", resource)
+								validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+							} else {
+								fmt.Printf("############ Sheet: %s ############\n", sheet)
+								fmt.Printf("############ Resource: %s ############\n", resource)
+								validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
+							}
+
+						} else if resource != "" {
+							// Scan for Borders
+							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
+							key := colSlice[0]
+							values := colSlice[1:]
+							rows := rowSlice
 							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
+							fmt.Println(keySlice)
 							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
 						}
 
-					} else if sheet == "Networking Services" && resource == "Networking" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Networking")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Networking Services" && resource == "Subnets" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Subnets")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Networking Services" && resource == "VPC Endpoints" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "VPC Endpoints")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Networking Services" && resource == "VPN Gateway" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "VPN Gateway")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Networking Services" && resource == "Route53" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Route53")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Networking Services" && resource == "Certificate Manager" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Certificate Manager")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Storage & Compute Services" && resource == "EC2 Standalone Instances" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "EC2 Standalone Instances")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Storage & Compute Services" && resource == "EC2 Autoscaling Groups" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "EC2 Autoscaling Groups")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Storage & Compute Services" && resource == "Network Load Balancers" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Network Load Balancers")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Storage & Compute Services" && resource == "Application Load Balancers" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Application Load Balancers")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Storage & Compute Services" && resource == "Target Groups" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Target Groups")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Storage & Compute Services" && resource == "S3 Buckets" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "S3 Buckets")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Storage & Compute Services" && resource == "EFS" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "EFS")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Database" && resource == "RDS" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "RDS")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-
-					} else if sheet == "Database" && resource == "Elasticache - Redis" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Elasticache - Redis")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-					} else if sheet == "Security Groups" && resource == "Security Group" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "Security Group")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-					} else if sheet == "IAM" && resource == "IAM Resource" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "IAM Resource")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
-					} else if sheet == "Additional Services" && resource == "CodeDeploy" {
-						// Header
-						fmt.Printf("############ Sheet: %s ############\n", sheet)
-						fmt.Printf("############ Resource: %s ############\n", resource)
-
-						// Scan for Keys
-						keySlice, _ := ScanKeys(inputFile, sheet, "CodeDeploy")
-
-						// Loop for all matched keys
-						for _, v := range keySlice {
-							// scan for borders
-							colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
-							key := colSlice[0]
-							values := colSlice[1:]
-							rows := rowSlice
-							validateCellsIfNotEmpty(inputFile, sheet, key, values, rows)
-						}
 					}
+
 				}
 
 			}
 
 		} else {
-			fmt.Println("Usage: rax-apj-build-tool validate -i ImpDoc_FAWS_APJTrial_v0.1.xlsx")
+			fmt.Println("Usage: rax-apj-build-tool validate --config config.yaml")
 		}
 
 	},

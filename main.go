@@ -21,6 +21,5 @@ import (
 )
 
 func main() {
-	//fmt.Println("inside main")
 	cmd.Execute()
 }

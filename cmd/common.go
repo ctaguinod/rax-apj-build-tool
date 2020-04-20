@@ -102,7 +102,7 @@ func ScanKeys(excelFile string, SheetTabName string, inputString string) (keySli
 		}
 		//println()
 	}
-	fmt.Println("Matched cell values:", keySlice)
+	//fmt.Println("Matched cell values:", keySlice)
 
 	// create slice for matched columns
 	regexMatchSlice = make([]string, 0)

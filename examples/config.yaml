@@ -1,5 +1,6 @@
 input: ./examples/Rapha_Racing_UAT_Imp_Doc_V2.xlsx
 sheets:
+  - Summary
   - Networking Services
   - Storage & Compute Services
   - Database
@@ -8,7 +9,7 @@ sheets:
   - Additional Services
 resources:
   - Networking
-  - Subnets
+  - Subnetworks
   - VPC Endpoints
   - VPN Gateway
   - Route53
@@ -25,3 +26,9 @@ resources:
   - Security Group
   - IAM Resource
   - CodeDeploy
+resourcesMap:
+  Summary:
+    sheet: "Summary"
+    key: "B"
+    values: "C"
+    rows: "10 11 12 13 16 17 18 19 20 23 24"
