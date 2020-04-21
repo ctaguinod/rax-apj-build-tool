@@ -26,7 +26,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-func getVpc(region, name, environment, cidr string) {
+func getVpc(environment, region, name, cidr string) {
 
 	svc := ec2.New(session.New(&aws.Config{
 		Region: aws.String(region),
@@ -50,7 +50,7 @@ func getVpc(region, name, environment, cidr string) {
 				},
 			},
 			&ec2.Filter{
-				Name: aws.String("cidr"),
+				Name: aws.String("cidrBlock"),
 				Values: []*string{
 					aws.String(cidr),
 				},
@@ -89,7 +89,7 @@ func getVpc(region, name, environment, cidr string) {
 
 }
 
-func getSubnets(region, name, environment, cidr string) {
+func getSubnets(environment, region, name, cidr, az string) {
 
 	svc := ec2.New(session.New(&aws.Config{
 		Region: aws.String(region),
@@ -100,22 +100,25 @@ func getSubnets(region, name, environment, cidr string) {
 			&ec2.Filter{
 				Name: aws.String("tag:Name"),
 				Values: []*string{
-					aws.String("CARLO-DEV-VPC-private-az1"),
-					//aws.String(name),
+					aws.String(name),
 				},
 			},
 			&ec2.Filter{
 				Name: aws.String("tag:Environment"),
 				Values: []*string{
-					//aws.String("Development"),
 					aws.String(environment),
 				},
 			},
 			&ec2.Filter{
-				Name: aws.String("cidr"),
+				Name: aws.String("cidrBlock"),
 				Values: []*string{
-					//aws.String("10.1.4.0/24"),
 					aws.String(cidr),
+				},
+			},
+			&ec2.Filter{
+				Name: aws.String("availabilityZone"),
+				Values: []*string{
+					aws.String(az),
 				},
 			},
 		},
@@ -139,10 +142,13 @@ func getSubnets(region, name, environment, cidr string) {
 	}
 
 	if result != nil {
+		fmt.Println("DescribeSubnets Output:")
 		fmt.Println(result)
 		fmt.Println("QC Status: PASS")
 		fmt.Println()
 	} else {
+		fmt.Println("DescribeSubnets Output:")
+		fmt.Println(result)
 		fmt.Println("QC Status: FAILED - please review Subnets")
 		fmt.Println()
 	}

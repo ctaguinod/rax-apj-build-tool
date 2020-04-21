@@ -43,77 +43,80 @@ rax-apj-build-tool qc -i validated-ImpDoc_FAWS_APJTrial_v0.1.xlsx --resources="s
 			inputFile = viper.GetString("input")
 		}
 
+		// Get the --sheets flag value
+		sheets, _ := cmd.Flags().GetStringSlice("sheets")
+		if viper.GetStringSlice("sheets") != nil {
+			sheets = viper.GetStringSlice("sheets")
+		}
+
 		// Get the --resources flag value
 		resources, _ := cmd.Flags().GetStringSlice("resources")
 		if viper.GetStringSlice("resources") != nil {
 			resources = viper.GetStringSlice("resources")
 		}
 
+		var environment string
+		var region string
+		var vpcName string
+
 		if inputFile != "" {
 
 			fmt.Printf("############ QC for DD Spreadsheet: %s ############\n", inputFile)
 			fmt.Println()
-
 			// Iterate each sheet
+			for _, sheet := range sheets {
 
-			for _, resource := range resources {
+				for _, resource := range resources {
 
-				if resource == "vpc" {
-
-					fmt.Printf("############ Resource: %s ############\n", resource)
-
-					/*
-						sheet := viper.GetString("resourcesMap.vpc.sheet")
-						key := viper.GetString("resourcesMap.vpc.key")
-						values := viper.GetStringSlice("resourcesMap.vpc.values")
-						rows := viper.GetStringSlice("resourcesMap.vpc.rows")
-						if sheet == "" && key == "" && values == nil && rows == nil {
-							sheet := "Networking Services"
-							key := "B"
-							values := []string{"C"}
-							rows := []string{"5", "6", "7", "8", "9", "10", "11", "12", "13"}
-							fmt.Printf("############ Default Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							qcVpc(inputFile, sheet, key, values, rows)
-						} else {
-							fmt.Printf("############ Else Sheet: %s ############\n", sheet)
-							fmt.Printf("############ Resource: %s ############\n", resource)
-							//qcVpc(inputFile, sheet, key, values, rows)
-							result := qcVpc(inputFile, sheet, key, values, rows)
-							fmt.Println(result)
-							//fmt.Println(result["Networking"])
-							//fmt.Println(result["Name of Environment"])
-						}
-					*/
-					sheet := viper.GetString("resourcesMap.vpc.sheet")
 					// Scan for Keys
-					keySlice, _ := ScanKeys(inputFile, sheet, "VPC Subnets")
-
-					// Loop for all matched keys
+					keySlice, _ := ScanKeys(inputFile, sheet, resource)
 					for _, v := range keySlice {
+
 						// scan for borders
 						colSlice, rowSlice := ScanBorders(inputFile, sheet, "multi", v, false)
 						key := colSlice[0]
 						values := colSlice[1:]
 						rows := rowSlice
 
-						data := qcVpc(inputFile, sheet, key, values, rows)
+						resourcesMap := getResourcesMap(inputFile, sheet, key, values, rows)
+						//fmt.Println(data)
 
-						//fmt.Println(colSlice)
-						//fmt.Println(rowSlice)
-						//fmt.Println(key)
-						//fmt.Println(values)
-						//fmt.Println(rows)
+						// VPC
+						if resource == "Networking" {
+							for _, column := range values {
+								environment = resourcesMap[column]["Name of Environment"]
+								region = resourcesMap[column]["Region"]
+								vpcName = resourcesMap[column]["Networking"]
+								vpcCidr := resourcesMap[column]["CIDR Range"]
 
-						fmt.Println(data)
-						fmt.Println(data["C"])
-						//fmt.Println(data["C"]["CIDR"])
-						fmt.Println(data["D"])
-						//fmt.Println(data["D"]["CIDR"])
-						fmt.Println(data["E"])
-						//fmt.Println(data["E"]["CIDR"])
-						fmt.Println(data["F"])
-						//fmt.Println(data["F"]["CIDR"])
+								fmt.Printf("############ QC for the following resoources: %s ############\n", resource)
+								fmt.Printf("environment: %s\n", environment)
+								fmt.Printf("region: %s\n", region)
+								fmt.Printf("vpcName: %s\n", vpcName)
+								fmt.Printf("vpcCidr: %s\n", vpcCidr)
+
+								getVpc(environment, region, vpcName, vpcCidr)
+							}
+						}
+
+						if resource == "Subnetworks" {
+							for _, column := range values {
+								subnetName := resourcesMap[column]["Subnetworks"]
+								subnetName = fmt.Sprintf("%s-%s", vpcName, subnetName)
+								subnetCidr := resourcesMap[column]["CIDR"]
+								subnetAz := resourcesMap[column]["AZ"]
+
+								fmt.Printf("############ QC for the following resoources: %s ############\n", resource)
+								fmt.Printf("subnetName: %s\n", subnetName)
+								fmt.Printf("subnetCidr: %s\n", subnetCidr)
+								fmt.Printf("subnetAz: %s\n", subnetAz)
+								fmt.Printf("environment: %s\n", environment)
+
+								getSubnets(environment, region, subnetName, subnetCidr, subnetAz)
+
+							}
+
+						}
 
 					}
 				}
@@ -137,7 +140,7 @@ func init() {
 	qcCmd.Flags().StringSlice("resources", []string{}, "Resources to process, e.g. vpc, subnets")
 }
 
-func qcVpc(inputFile string, sheet string, key string, columns []string, rows []string) map[string]map[string]string {
+func getResourcesMap(inputFile string, sheet string, key string, columns []string, rows []string) map[string]map[string]string {
 
 	// Input File.
 	xlsxFileIn, err := excelize.OpenFile(inputFile)
@@ -181,6 +184,5 @@ func qcVpc(inputFile string, sheet string, key string, columns []string, rows []
 
 	}
 
-	//fmt.Println(mainMap)
 	return mainMap
 }
