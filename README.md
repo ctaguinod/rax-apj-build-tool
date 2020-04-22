@@ -79,9 +79,10 @@ go get github.com/jmespath/go-jmespath
     - https://github.com/awsdocs/aws-doc-sdk-examples/tree/master/go/example_code
     - https://docs.aws.amazon.com/sdk-for-go/api/service/ec2/#EC2.DescribeVpcs
     - https://docs.aws.amazon.com/sdk-for-go/api/service/ec2/#EC2.DescribeSubnets
+    - https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSubnets.html
 
 
-## Test
-go run main.go validate -i Rapha_Racing_UAT_Imp_Doc_V2.xlsx --sheets="Summary","Networking Services","Storage & Compute Services","Database" --resources="summary","vpc","subnets","ec2_instances","auto_scaling_groups","rds","elasticache","vpc_endpoints"
-
-go run main.go validate --config ./examples/config.yaml
+## Test Commands
+- go run main.go validate -i Rapha_Racing_UAT_Imp_Doc_V2.xlsx --sheets="Summary","Networking Services","Storage & Compute Services","Database" --resources="summary","vpc","subnets","ec2_instances","auto_scaling_groups","rds","elasticache","vpc_endpoints"
+- go run main.go validate --config ./examples/config.yaml
+- go run main.go qc --config ./examples/config-qc-test.yaml

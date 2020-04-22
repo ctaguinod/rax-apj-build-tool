@@ -62,7 +62,6 @@ rax-apj-build-tool qc -i validated-ImpDoc_FAWS_APJTrial_v0.1.xlsx --resources="s
 		if inputFile != "" {
 
 			fmt.Printf("############ QC for DD Spreadsheet: %s ############\n", inputFile)
-			fmt.Println()
 			// Iterate each sheet
 			for _, sheet := range sheets {
 
@@ -79,43 +78,75 @@ rax-apj-build-tool qc -i validated-ImpDoc_FAWS_APJTrial_v0.1.xlsx --resources="s
 						rows := rowSlice
 
 						resourcesMap := getResourcesMap(inputFile, sheet, key, values, rows)
-						//fmt.Println(data)
+						//fmt.Println(resourcesMap)
 
 						// VPC
 						if resource == "Networking" {
 							for _, column := range values {
-								environment = resourcesMap[column]["Name of Environment"]
 								region = resourcesMap[column]["Region"]
+								environment = resourcesMap[column]["Name of Environment"]
 								vpcName = resourcesMap[column]["Networking"]
 								vpcCidr := resourcesMap[column]["CIDR Range"]
-
-								fmt.Printf("############ QC for the following resoources: %s ############\n", resource)
-								fmt.Printf("environment: %s\n", environment)
-								fmt.Printf("region: %s\n", region)
-								fmt.Printf("vpcName: %s\n", vpcName)
-								fmt.Printf("vpcCidr: %s\n", vpcCidr)
-
+								fmt.Println()
+								fmt.Printf("############ QC for VPC ############\n")
+								fmt.Printf("###### DD Parameters ######\n")
+								fmt.Printf("Region: %s\n", region)
+								fmt.Printf("Environment: %s\n", environment)
+								fmt.Printf("VPC Name: %s\n", vpcName)
+								fmt.Printf("VPC CIDR: %s\n", vpcCidr)
+								fmt.Println()
 								getVpc(environment, region, vpcName, vpcCidr)
 							}
 						}
 
+						//Subnets
 						if resource == "Subnetworks" {
 							for _, column := range values {
 								subnetName := resourcesMap[column]["Subnetworks"]
 								subnetName = fmt.Sprintf("%s-%s", vpcName, subnetName)
 								subnetCidr := resourcesMap[column]["CIDR"]
 								subnetAz := resourcesMap[column]["AZ"]
-
-								fmt.Printf("############ QC for the following resoources: %s ############\n", resource)
-								fmt.Printf("subnetName: %s\n", subnetName)
-								fmt.Printf("subnetCidr: %s\n", subnetCidr)
-								fmt.Printf("subnetAz: %s\n", subnetAz)
-								fmt.Printf("environment: %s\n", environment)
-
+								fmt.Println()
+								fmt.Printf("############ QC for Subnet %s ############\n", column)
+								fmt.Printf("###### DD Parameters ######\n")
+								fmt.Printf("Region: %s\n", region)
+								fmt.Printf("Environment: %s\n", environment)
+								fmt.Printf("Subnet Name: %s\n", subnetName)
+								fmt.Printf("Subnet CIDR: %s\n", subnetCidr)
+								fmt.Printf("AZ: %s\n", subnetAz)
+								fmt.Println()
 								getSubnets(environment, region, subnetName, subnetCidr, subnetAz)
-
 							}
+						}
 
+						// EC2 Standalone Instances
+						if resource == "EC2 Standalone Instances" {
+							for _, column := range values {
+								instanceName := resourcesMap[column]["EC2 Standalone Instances"]
+								instanceType := resourcesMap[column]["Instance Type"]
+								instanceImage := resourcesMap[column]["Instance Image"]
+								instanceSubnet := resourcesMap[column]["Subnet"]
+								rootVolume := resourcesMap[column]["Root Volume Size (GB)"]
+								rootVolumeEncrypt := resourcesMap[column]["Encrypt Root Volume"]
+								dataVolume := resourcesMap[column]["Data Volume Size(s) (GB)"]
+								dataVolumeEncrypt := resourcesMap[column]["Encrypt Data Volumes"]
+								securityGroups := resourcesMap[column]["SecurityGroup(s)"]
+								fmt.Println()
+								fmt.Printf("############ QC for EC2 Standalone Instance %s ############\n", column)
+								fmt.Printf("###### DD Parameters ######\n")
+								fmt.Printf("Region: %s\n", region)
+								fmt.Printf("Environment: %s\n", environment)
+								fmt.Printf("EC2 Instance Name: %s\n", instanceName)
+								fmt.Printf("Instance Image: %s\n", instanceImage)
+								fmt.Printf("Subnet: %s\n", instanceSubnet)
+								fmt.Printf("Root Volume Size (GB): %s\n", rootVolume)
+								fmt.Printf("Encrypt Root Volume: %s\n", rootVolumeEncrypt)
+								fmt.Printf("Data Volume Size(s) (GB): %s\n", dataVolume)
+								fmt.Printf("Encrypt Data Volumes: %s\n", dataVolumeEncrypt)
+								fmt.Printf("SecurityGroup(s): %s\n", securityGroups)
+								fmt.Println()
+								getEC2(environment, region, instanceName, instanceType)
+							}
 						}
 
 					}
@@ -153,9 +184,9 @@ func getResourcesMap(inputFile string, sheet string, key string, columns []strin
 	var columnValue string
 	mainMap := make(map[string]map[string]string)
 
-	fmt.Printf("###### Columns: %s ######\n", columns)
-	fmt.Printf("###### Rows: %s ######\n", rows)
-	fmt.Println()
+	//fmt.Printf("###### Columns: %s ######\n", columns)
+	//fmt.Printf("###### Rows: %s ######\n", rows)
+	//fmt.Println()
 
 	for _, column := range columns {
 

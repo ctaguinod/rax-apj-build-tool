@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -110,11 +109,12 @@ func ScanKeys(excelFile string, SheetTabName string, inputString string) (keySli
 	searchAlphabet := "[a-zA-Z]+"
 	// creates a regexp from string
 	alphabetRegex, _ := regexp.Compile(searchAlphabet)
-	for i, v := range keySlice {
-		fmt.Println("Index : value are[", i, ":", v, "]")
+	for _, v := range keySlice {
+		//	for i, v := range keySlice {
+		//fmt.Println("Index : value are[", i, ":", v, "]")
 		regexMatches := alphabetRegex.FindStringSubmatch(v)
-		fmt.Println("matched:", regexMatches)
-		fmt.Println("final regexMatches:", regexMatches, "with type of", reflect.TypeOf(regexMatches))
+		//fmt.Println("matched:", regexMatches)
+		//fmt.Println("final regexMatches:", regexMatches, "with type of", reflect.TypeOf(regexMatches))
 
 		// append
 		regexMatchSlice = append(regexMatchSlice, regexMatches[0])
@@ -200,12 +200,12 @@ func ScanBorders(excelFile, sheetName, colCondition string, currentCellName stri
 			if nextCellValue != "" {
 				nextColValueInt++
 				// [DEBUG] Prints current loop
-				fmt.Println("# Message:[", nextCellString, "] with value of [", nextCellValue, "]")
+				//fmt.Println("# Message:[", nextCellString, "] with value of [", nextCellValue, "]")
 				continue
 
 			} else {
 				// [DEBUG] Prints current loop
-				fmt.Println("# Message:[", nextCellString, "] with value [", nextCellValue, "]", "\n## End of Range ##")
+				//fmt.Println("# Message:[", nextCellString, "] with value [", nextCellValue, "]", "\n## End of Range ##")
 				// remove the empty cell
 				colSlice = colSlice[:len(colSlice)-1]
 
