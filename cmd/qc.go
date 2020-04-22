@@ -145,7 +145,7 @@ rax-apj-build-tool qc -i validated-ImpDoc_FAWS_APJTrial_v0.1.xlsx --resources="s
 								fmt.Printf("Encrypt Data Volumes: %s\n", dataVolumeEncrypt)
 								fmt.Printf("SecurityGroup(s): %s\n", securityGroups)
 								fmt.Println()
-								getEC2(environment, region, instanceName, instanceType)
+								getEC2(environment, region, instanceName, instanceType, rootVolume, rootVolumeEncrypt)
 							}
 						}
 

@@ -156,7 +156,7 @@ func getSubnets(environment, region, name, cidr, az string) {
 
 }
 
-func getEC2(environment, region, name, instanceType string) {
+func getEC2(environment, region, name, instanceType, rootVolume, rootVolumeEncrypt string) {
 
 	svc := ec2.New(session.New(&aws.Config{
 		Region: aws.String(region),
@@ -197,8 +197,46 @@ func getEC2(environment, region, name, instanceType string) {
 		},
 	}
 
+	// Change encrypted value: No==false, Yes==true
+	if rootVolumeEncrypt == "No" {
+		rootVolumeEncrypt = fmt.Sprintf("false")
+	} else if rootVolumeEncrypt == "Yes" {
+		rootVolumeEncrypt = fmt.Sprintf("true")
+	}
+
+	inputVolumes := &ec2.DescribeVolumesInput{
+		Filters: []*ec2.Filter{
+			&ec2.Filter{
+				Name: aws.String("tag:Name"),
+				Values: []*string{
+					aws.String(name),
+				},
+			},
+			&ec2.Filter{
+				Name: aws.String("size"),
+				Values: []*string{
+					aws.String(rootVolume),
+				},
+			},
+			&ec2.Filter{
+				Name: aws.String("encrypted"),
+				Values: []*string{
+					aws.String(rootVolumeEncrypt),
+				},
+			},
+			&ec2.Filter{
+				Name: aws.String("volume-type"),
+				Values: []*string{
+					aws.String("gp2"),
+				},
+			},
+		},
+	}
+
 	describe, err := svc.DescribeInstances(input)
 	result, err := awsutil.ValuesAtPath(describe, "Reservations[0]")
+	describeVolumes, err := svc.DescribeVolumes(inputVolumes)
+	resultVolumes, err := awsutil.ValuesAtPath(describeVolumes, "Volumes[0]")
 
 	if err != nil {
 		if aerr, ok := err.(awserr.Error); ok {
@@ -214,14 +252,18 @@ func getEC2(environment, region, name, instanceType string) {
 		return
 	}
 
-	if result != nil {
+	if result != nil && resultVolumes != nil {
 		//fmt.Printf("DescribeInstances Output: %s\n", result)
+		//fmt.Printf("DescribeVolumes Output: %s\n", resultVolumes)
+
 		ec2 := describe.Reservations[0].Instances[0]
 		InstanceID := ec2.InstanceId
 		SubnetID := ec2.SubnetId
 		ImageID := ec2.ImageId
 		KeyName := ec2.KeyName
 		RootVolume := ec2.BlockDeviceMappings[0].Ebs.VolumeId
+		RootVolumeType := describeVolumes.Volumes[0].VolumeType
+		RootVolumeEncrypted := describeVolumes.Volumes[0].Encrypted
 
 		fmt.Printf("###### AWS Environment ######\n")
 		fmt.Printf("InstanceId: %s\n", *InstanceID)
@@ -229,11 +271,19 @@ func getEC2(environment, region, name, instanceType string) {
 		fmt.Printf("ImageId: %s\n", *ImageID)
 		fmt.Printf("KeyName: %s\n", *KeyName)
 		fmt.Printf("RootVolume: %s\n", *RootVolume)
+		fmt.Printf("RootVolumeType: %s\n", *RootVolumeType)
+		fmt.Printf("RootVolumeType: %v\n", *RootVolumeEncrypted)
 
 		fmt.Println("QC: PASS")
 
 	} else {
-		fmt.Printf("DescribeInstances Output: %s\n", result)
-		fmt.Printf("QC: FAILED - Please review EC2 Instance %s\n", name)
+		if result == nil {
+			//fmt.Printf("DescribeInstances Output: %s\n", result)
+			fmt.Printf("QC: FAILED - Please review EC2 Instance configs for %s\n", name)
+		}
+		if resultVolumes == nil {
+			//fmt.Printf("DescribeVolumes Output: %s\n", resultVolumes)
+			fmt.Printf("QC: FAILED - Please review EBS Volume configs for EC2 Instance %s\n", name)
+		}
 	}
 }
