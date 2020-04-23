@@ -36,3 +36,25 @@ cobra add <commandName>
 cobra add validate
 cobra add qc
 ```
+
+## Git Cheatsheets
+
+```bash
+git tag -l                       # List tags
+git tag v0.0.1                   # Create tag v0.0.1
+git push --tags                  # Push tag to origin
+git tag -d v0.0.1                # Delete tag in local
+git push --delete origin v0.0.1  # Delete tag in origin
+git add <file or folder>         # Add file/folder to Git
+git commit -m <commit message>   # Commit change
+git push                         # Push to origin
+```
+
+## Makefile
+
+```bash
+make help      # Show available commands
+make tools     # Install required tools
+make build     # Build binary file for current platform, output will be stored in ./bin/
+make build-all # Build binary files for linux mac and windows platform, output will be stored in ./bin/
+```
