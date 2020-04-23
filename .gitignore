@@ -21,5 +21,6 @@ rax-apj-build-tool
 validated-*
 
 # Temp Files and Directories
+bin
 tmp
 releases
