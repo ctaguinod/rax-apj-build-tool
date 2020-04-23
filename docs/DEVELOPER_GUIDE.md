@@ -48,6 +48,7 @@ git push --delete origin v0.0.1  # Delete tag in origin
 git add <file or folder>         # Add file/folder to Git
 git commit -m <commit message>   # Commit change
 git push                         # Push to origin
+git status                       # Check git status
 ```
 
 ## Makefile
