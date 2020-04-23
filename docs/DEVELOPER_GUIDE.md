@@ -54,8 +54,9 @@ git status                       # Check git status
 ## Makefile
 
 ```bash
-make help      # Show available commands
-make tools     # Install required tools
-make build     # Build binary file for current platform, output will be stored in ./bin/
-make build-all # Build binary files for linux mac and windows platform, output will be stored in ./bin/
+make help                   # Show available commands
+make tools                  # Install required tools
+make build                  # Build binary file for current platform, output will be stored in ./bin/
+make build-all              # Build binary files for linux mac and windows platform, output will be stored in ./bin/
+make release version=0.1.0  # Release version, *** Not fully tested, currently not working on Mac ***
 ```
