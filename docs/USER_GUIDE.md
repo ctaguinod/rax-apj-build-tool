@@ -90,13 +90,3 @@ Flags:
 Global Flags:
       --config string   sample config files in https://github.com/ctaguinod/rax-apj-build-tool/blob/master/examples/
 ```
-
-
-
-
-
-
-## Test Commands
-- go run main.go validate -i Rapha_Racing_UAT_Imp_Doc_V2.xlsx --sheets="Summary","Networking Services","Storage & Compute Services","Database" --resources="summary","vpc","subnets","ec2_instances","auto_scaling_groups","rds","elasticache","vpc_endpoints"
-- go run main.go validate --config ./examples/config.yaml
-- go run main.go qc --config ./examples/config-qc-test.yaml
