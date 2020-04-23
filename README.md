@@ -17,7 +17,7 @@ Read the [User Guide](./docs/USER_GUIDE.md) and [Developer Guide](./docs/DEVELOP
 Binaries are available on the [releases](https://github.com/ctaguinod/rax-apj-build-tool/releases) page. To install, download the binary for your platform from "Assets" and place this into your `$PATH`:
 
 ```bash
-curl -Lo ./rax-apj-build-tool https://github.com/ctaguinod/rax-apj-build-tool/releases/download/v0.0.2/rax-apj-build-tool-v0.9.1-$(uname | tr '[:upper:]' '[:lower:]')-amd64
+curl -Lo ./rax-apj-build-tool https://github.com/ctaguinod/rax-apj-build-tool/releases/download/v0.0.1/rax-apj-build-tool-v0.0.1-$(uname | tr '[:upper:]' '[:lower:]')-amd64
 chmod +x ./rax-apj-build-tool
 mv ./rax-apj-build-tool /some/dir/to/your/PATH/rax-apj-build-tool
 ```
