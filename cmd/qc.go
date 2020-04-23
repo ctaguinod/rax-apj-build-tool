@@ -28,12 +28,16 @@ import (
 // qcCmd represents the qc command
 var qcCmd = &cobra.Command{
 	Use:   "qc",
-	Short: "QC AWS Build against Validated DD SpreadSheet",
-	Long: `QC AWS Build against Validated DD SpreadSheet.
+	Short: "Automated QC of AWS Environment using validated DD spreadsheet",
+	Long: `Automated QC of AWS Environment using validated DD spreadsheet.
 
 Example Usage:
 
-rax-apj-build-tool qc -i validated-ImpDoc_FAWS_APJTrial_v0.1.xlsx --resources="summary","vpc","subnets"`,
+./rax-apj-build-tool qc --config config.yaml 
+	
+or 
+	
+./rax-apj-build-tool qc -i validated-ImpDoc_FAWS.xlsx --sheets="Networking Services","Storage & Compute Services" --resources="Networking","Subnetworks","EC2 Standalone Instances"`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -167,8 +171,11 @@ func init() {
 	// -i flag
 	qcCmd.Flags().StringP("input", "i", "", "DD Spreadsheet file to process")
 
+	// --sheets flag
+	qcCmd.Flags().StringSlice("sheets", []string{}, "Sheets to process, e.g. Networking Service, Storage & Compute Service")
+
 	// --resources flag
-	qcCmd.Flags().StringSlice("resources", []string{}, "Resources to process, e.g. vpc, subnets")
+	qcCmd.Flags().StringSlice("resources", []string{}, "Resources to process, e.g. Networking, Subnetworks, EC2 Standalone Instances")
 }
 
 func getResourcesMap(inputFile string, sheet string, key string, columns []string, rows []string) map[string]map[string]string {

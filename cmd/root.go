@@ -30,8 +30,8 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "rax-apj-build-tool",
-	Short: "A collection of CLI Tools used by APJ Build Team.",
-	Long:  `A collection of CLI Tools used by APJ Build Team.`,
+	Short: "A command line utility tool to perform various automation tasks by APJ Build Engineering Team.",
+	Long:  `A command line utility tool to perform various automation tasks by APJ Build Engineering Team.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -50,7 +50,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.rax-apj-build-tool.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "sample config files in https://github.com/ctaguinod/rax-apj-build-tool/blob/master/examples/")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

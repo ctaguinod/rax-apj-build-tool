@@ -81,7 +81,7 @@ func getVpc(environment, region, name, cidr string) {
 		fmt.Printf("###### AWS Environment ######\n")
 		fmt.Printf("SubnetId: %s\n", *VpcID)
 
-		fmt.Println("QC: PASS")
+		fmt.Println("QC: PASSED")
 	} else {
 		fmt.Printf("DescribeVpcs Output: %s\n", result)
 		fmt.Printf("QC: FAILED - Please review VPC %s\n", name)
@@ -148,7 +148,7 @@ func getSubnets(environment, region, name, cidr, az string) {
 		fmt.Printf("###### AWS Environment ######\n")
 		fmt.Printf("SubnetId: %s\n", *SubnetID)
 
-		fmt.Println("QC: PASS")
+		fmt.Println("QC: PASSED")
 	} else {
 		fmt.Printf("DescribeSubnets Output: %s\n", result)
 		fmt.Printf("QC: FAILED - Please review subnet %s\n", name)
@@ -272,9 +272,9 @@ func getEC2(environment, region, name, instanceType, rootVolume, rootVolumeEncry
 		fmt.Printf("KeyName: %s\n", *KeyName)
 		fmt.Printf("RootVolume: %s\n", *RootVolume)
 		fmt.Printf("RootVolumeType: %s\n", *RootVolumeType)
-		fmt.Printf("RootVolumeType: %v\n", *RootVolumeEncrypted)
+		fmt.Printf("RootVolumeEncrypted: %v\n", *RootVolumeEncrypted)
 
-		fmt.Println("QC: PASS")
+		fmt.Println("QC: PASSED")
 
 	} else {
 		if result == nil {

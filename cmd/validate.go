@@ -29,18 +29,18 @@ import (
 // validateCmd represents the validate command
 var validateCmd = &cobra.Command{
 	Use:   "validate",
-	Short: "Validate DD SpreadSheet",
+	Short: "Validate DD Spreadsheet if all required fields are not empty.",
 	Long: `Validate DD Spreadsheet if all required fields are not empty. 
 
 Example Usage:
 
-rax-apj-build-tool validate --config config.yaml 
+./rax-apj-build-tool validate --config config.yaml 
 
 or 
 
-rax-apj-build-tool validate -i ImpDoc_FAWS_APJTrial_v0.1.xlsx --sheets="Networking Services","Storage & Compute Services" --resources="Networking","Subnetworks","EC2 Standalone Instances","EC2 Autoscaling Groups"
+./rax-apj-build-tool validate -i ImpDoc_FAWS.xlsx --sheets="Networking Services","Storage & Compute Services" --resources="Networking","Subnetworks","EC2 Standalone Instances","EC2 Autoscaling Groups"
 
-The command will create a validated DD spreadsheet validated-ImpDoc_FAWS_APJTrial_v0.1.xlsx in current working directory.
+The command will create a validated DD spreadsheet validated-ImpDoc_FAWS.xlsx in current working directory.
 Required cells that are empty will be highlighted in color ORANGE which means validation FAILED and needed to be filled in.
 Required cells that are not empty will be highlighted in color GREEN which means validation PASS.
 `,
@@ -137,7 +137,7 @@ func init() {
 	validateCmd.Flags().StringSlice("sheets", []string{}, "Sheets to process, e.g. Networking Service, Storage & Compute Service")
 
 	// --resources flag
-	validateCmd.Flags().StringSlice("resources", []string{}, "Resources to process, e.g. vpc, subnets")
+	validateCmd.Flags().StringSlice("resources", []string{}, "Resources to process, e.g. Networking, Subnetworks, EC2 Standalone Instances")
 }
 
 func validateCellsIfNotEmpty(inputFile string, sheet string, key string, columns []string, rows []string) {

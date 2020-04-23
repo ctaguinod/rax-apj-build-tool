@@ -1,88 +1,25 @@
 # rax-apj-build-tool
-APJ Build CLI Tool
 
-## Example Go commands
+## What is rax-apj-build-tool
 
-```
-go run main.go
-go fmt
-go build 
-```
+A command line utility tool to perform various automation tasks by APJ Build Engineering Team.
 
-## Modules Used
-
-### Excelize
-
-```
-go get github.com/360EntSecGroup-Skylar/excelize
+``` bash
+./rax-apj-build-tool validate --config config.yaml # Validate DD Spreadsheet if all required fields are not empty
+./rax-apj-build-tool build --config config.yaml    # Generate build parameters (.tf. .tfvars) from validated DD spreadsheet
+./rax-apj-build-tool qc --config config.yaml       # Automated QC of AWS Environment using validated DD spreadsheet
 ```
 
+Read the [User Guide](./docs/USER_GUIDE.md) and [Developer Guide](./docs/DEVELOPER_GUIDE.md) for detailed documentation.
 
-### Cobra 
-- Cobra Syntax: APPNAME Command Args --Flags or APPNAME Command --Flags Args  (rax-apj-build-tool <command> [arguments] --flag)
+## Installation
 
-```
-go get github.com/spf13/cobra
-go get -u github.com/spf13/cobra
-```
+Binaries are available on the [releases](https://github.com/ctaguinod/rax-apj-build-tool/releases) page. To install, download the binary for your platform from "Assets" and place this into your `$PATH`:
 
-Install Cobra CLI.
-
-```
-go get github.com/spf13/cobra/cobra
-go get -u github.com/spf13/cobra/cobra
+```bash
+curl -Lo ./terraform-docs https://github.com/segmentio/terraform-docs/releases/download/v0.9.1/terraform-docs-v0.9.1-$(uname | tr '[:upper:]' '[:lower:]')-amd64
+chmod +x ./terraform-docs
+mv ./rax-apj-build-tool /some/dir/to/your/PATH/rax-apj-build-tool
 ```
 
-Example to initialize Cobra on new project/folder.
-
-```
-mkdir my-cobra-project
-cd my-cobra-project
-cobra init --pkg-name my-cobra-project
-go mod init my-cobra-project
-```
-
-To add cobra command
-
-```
-cobra add <commandName>
-cobra add validate
-cobra add qc
-```
-
-### AWS SDK
-
-```
-go get github.com/aws/aws-sdk-go/aws
-go get github.com/jmespath/go-jmespath
-```
-
-
-## CLI Tool Features / Functionalities:
-- Required Input: DD Spreadsheet.
-- Tool Name: rax-apj-build-tool
-    - Command: validate (e.g. rax-apj-build-tool validate -i i.xlsx -s "Networking Services")
-        - Flags: 
-            - --input | -i: DD SpreadSheet, xlsx file
-            - --sheet : Sheet name to process
-            - --config : YAML config file
-    - Command: qc (e.g. rax-apj-build-tool qc -i i.xlsx -s "Networking Services")
-        - Flags: 
-            - --input | -i: validated xlsx file
-            - --sheet : Sheet name to process
-
-## ToDos
-- Currently hardcoded rows/columns range to process, need to find way to be more extendible, e.g. external config/schema in YAML file.
-- For QC: use sdk-for-go to query resources from DD Spreadsheet
-    - https://docs.aws.amazon.com/sdk-for-go/index.html
-    - https://docs.aws.amazon.com/sdk-for-go/api/index.html
-    - https://github.com/awsdocs/aws-doc-sdk-examples/tree/master/go/example_code
-    - https://docs.aws.amazon.com/sdk-for-go/api/service/ec2/#EC2.DescribeVpcs
-    - https://docs.aws.amazon.com/sdk-for-go/api/service/ec2/#EC2.DescribeSubnets
-    - https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSubnets.html
-
-
-## Test Commands
-- go run main.go validate -i Rapha_Racing_UAT_Imp_Doc_V2.xlsx --sheets="Summary","Networking Services","Storage & Compute Services","Database" --resources="summary","vpc","subnets","ec2_instances","auto_scaling_groups","rds","elasticache","vpc_endpoints"
-- go run main.go validate --config ./examples/config.yaml
-- go run main.go qc --config ./examples/config-qc-test.yaml
+**NOTE:** Windows releases are in `EXE` format.
