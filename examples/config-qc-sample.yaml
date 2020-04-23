@@ -1,4 +1,4 @@
-input: ./examples/ImpDoc_FAWS_QC_Test.xlsx
+input: ImpDoc_FAWS_QC_Test.xlsx
 sheets:
   - Networking Services
   - Storage & Compute Services

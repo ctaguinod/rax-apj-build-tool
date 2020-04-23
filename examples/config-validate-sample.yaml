@@ -1,4 +1,4 @@
-input: ./examples/Rapha_Racing_UAT_Imp_Doc_V2.xlsx
+input: Rapha_Racing_UAT_Imp_Doc_V2.xlsx
 sheets:
   - Summary
   - Networking Services
