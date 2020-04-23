@@ -19,3 +19,7 @@ rax-apj-build-tool
 
 # Validated xlsx output files
 validated-*
+
+# Temp Files and Directories
+tmp
+releases
