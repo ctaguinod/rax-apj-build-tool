@@ -30,7 +30,7 @@ The `validate` command will generate a new spreadsheet prefixed with `validated-
 
 The validated DD spreadsheet will be updated with cells highlighted in color `GREEN` for `PASS` and `ORANGE` for `FAILED`. PASS means required field is properly filled in, FAILED means required field is left blank and should be filled in.
 
-Example config.yaml and DD Spreadsheets files are provided in the [examples](https://github.com/ctaguinod/rax-apj-build-tool/blob/master/examples/) directory.
+Example [config.yaml](https://gist.github.com/ctaguinod/0cf0f1091ac2733435692d776cbfbb0d) and DD Spreadsheets files are provided in the [examples](https://github.com/ctaguinod/rax-apj-build-tool/blob/master/examples/) directory.
 
 ```
 Example Usage:
@@ -66,7 +66,7 @@ The `qc` command requires valid aws credentials before running.
 
 The `qc` command runs a QC check for provisioned resources in the actual AWS environment againts the DD spreadsheet.
 
-Example config.yaml and DD Spreadsheets files are provided in the [examples](https://github.com/ctaguinod/rax-apj-build-tool/blob/master/examples/) directory.
+Example [config.yaml](https://gist.github.com/ctaguinod/65a39d6e3df027d626ce30878f05b9a1) and DD Spreadsheets files are provided in the [examples](https://github.com/ctaguinod/rax-apj-build-tool/blob/master/examples/) directory.
 
 
 ```
