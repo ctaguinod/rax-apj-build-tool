@@ -29,7 +29,11 @@ The [`./rax-apj-build-tool validate`](../cmd/validate.go) command Validates DD S
 Functions:
 
 - `copy` - Used to copy input file spreadsheet to validated spreadsheet.
-- `ScanKeys` and `ScanBorders` - Used to scan the input spreadsheet file, sheet and search for the resource name using regex and will output the cell ranges to be used and processed by `validateCellsIfNotEmpty`.
+- `ScanKeys`  - func ScanKeys(excelFile string, SheetTabName string, inputString string) (keySlice, regexMatchSlice []string) 
+  - Searches for matching resource name as `inputString` via regexp (case insensitive) and returns named results as `keySlice` and `regexMatchSlice`  
+- `ScanBorders` - ScanBorders(excelFile, sheetName, colCondition string, currentCellName string, ignoreNotes bool) (colSlice []string, rowSlice []string)
+  - checks if next row/column has values; if they do, it appends to the string slice and then returns named results as `rowSlice` and `colSlice`
+-  Outputs from `ScanKeys` and `ScanBorders` are  used and processed by `validateCellsIfNotEmpty`.
 - `validateCellsIfNotEmpty` - Used to validate cells if empty, non empty cells will highlight the cell to color GREEN and empty cell will highlight the color to ORANGE meaning needs to be filled in.
 
 Flags:
